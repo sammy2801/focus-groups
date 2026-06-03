@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1 — Behaviour Ladder</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #F7F6F3;
+            color: #1A1917;
+            min-height: 100vh;
+            padding: 40px 24px 60px;
+        }
+
+        .page-header {
+            max-width: 920px;
+            margin: 0 auto 36px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .ex-tag {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #8A8780;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .instruction {
+            font-size: 16px;
+            color: #5A5855;
+            margin-top: 8px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #6B6860;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.done    { background: #2A6049; }
+        .legend-dot.imagine { background: #8B5A1C; }
+        .legend-dot.none    { background: #D0CEC9; border: 1px solid #C0BDB8; }
+
+        /* Participant section */
+        .participant-section {
+            max-width: 920px;
+            margin: 0 auto 32px;
+        }
+
+        .participant-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .participant-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .participant-label {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #6B6860;
+        }
+
+        .btn-reset {
+            font-size: 12px;
+            color: #9A9690;
+            background: none;
+            border: 1px solid #DDD9D3;
+            border-radius: 5px;
+            padding: 5px 12px;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .btn-reset:hover {
+            color: #1A1917;
+            border-color: #9A9690;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .item {
+            padding: 14px 16px;
+            background: #fff;
+            border: 1.5px solid #E8E5DF;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.45;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            transition: border-color 0.12s, background 0.12s, color 0.12s;
+        }
+
+        .item:hover {
+            border-color: #C8C5BF;
+        }
+
+        .item-icon {
+            font-size: 15px;
+            min-width: 16px;
+            text-align: center;
+            line-height: 1.45;
+            color: #D0CEC9;
+            transition: color 0.12s;
+            flex-shrink: 0;
+        }
+
+        .item.done {
+            background: #EAF4EE;
+            border-color: #2A6049;
+            color: #1A3D2E;
+        }
+
+        .item.done .item-icon { color: #2A6049; }
+
+        .item.imagine {
+            background: #FBF0E0;
+            border-color: #8B5A1C;
+            color: #4A2E08;
+        }
+
+        .item.imagine .item-icon { color: #8B5A1C; }
+
+        .divider {
+            max-width: 920px;
+            margin: 32px auto;
+            border: none;
+            border-top: 1px solid #E8E5DF;
+        }
+
+        .page-nav {
+            max-width: 920px;
+            margin: 48px auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            color: #6B6860;
+            text-decoration: none;
+            padding: 8px 0;
+            border-bottom: 1px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .nav-link:hover {
+            color: #1A1917;
+            border-bottom-color: #1A1917;
+        }
+
+        .nav-indicator { font-size: 13px; color: #9A9690; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <div class="ex-tag">Exercise 01</div>
+            <h1>What have you done?</h1>
+            <p class="instruction">Tell us which of these apply to you — and which you could imagine doing.</p>
+        </div>
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot done"></div><span>Done</span></div>
+            <div class="legend-item"><div class="legend-dot imagine"></div><span>Could imagine</span></div>
+            <div class="legend-item"><div class="legend-dot none"></div><span>Neither</span></div>
+        </div>
+    </div>
+
+    <!-- Participant 1 -->
+    <div class="participant-section">
+        <div class="participant-header">
+            <span class="participant-label">Participant 1</span>
+            <button class="btn-reset" onclick="resetSection(this.closest('.participant-section'))">Reset</button>
+        </div>
+        <div class="grid">
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've looked into how animals are farmed</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've thought about where my food comes from</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've signed a petition about animal welfare</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've reduced how much meat I eat</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've tried buying something because it said higher-welfare or free-range</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've shared or said something about animal welfare to someone</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Participant 2 -->
+    <div class="participant-section">
+        <div class="participant-header">
+            <span class="participant-label">Participant 2</span>
+            <button class="btn-reset" onclick="resetSection(this.closest('.participant-section'))">Reset</button>
+        </div>
+        <div class="grid">
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've looked into how animals are farmed</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've thought about where my food comes from</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've signed a petition about animal welfare</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've reduced how much meat I eat</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've tried buying something because it said higher-welfare or free-range</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've shared or said something about animal welfare to someone</div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Participant 3 -->
+    <div class="participant-section">
+        <div class="participant-header">
+            <span class="participant-label">Participant 3</span>
+            <button class="btn-reset" onclick="resetSection(this.closest('.participant-section'))">Reset</button>
+        </div>
+        <div class="grid">
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've looked into how animals are farmed</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've thought about where my food comes from</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've signed a petition about animal welfare</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've reduced how much meat I eat</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've tried buying something because it said higher-welfare or free-range</div>
+            <div class="item" onclick="toggle(this)"><span class="item-icon">○</span>I've shared or said something about animal welfare to someone</div>
+        </div>
+    </div>
+
+    <nav class="page-nav">
+        <a href="index.html" class="nav-link">← Home</a>
+        <span class="nav-indicator">1 / 3</span>
+        <a href="exercise-2.html" class="nav-link">Next →</a>
+    </nav>
+
+    <script>
+        function toggle(el) {
+            const icon = el.querySelector('.item-icon');
+            if (el.classList.contains('done')) {
+                el.classList.remove('done');
+                el.classList.add('imagine');
+                icon.textContent = '◌';
+            } else if (el.classList.contains('imagine')) {
+                el.classList.remove('imagine');
+                icon.textContent = '○';
+            } else {
+                el.classList.add('done');
+                icon.textContent = '✓';
+            }
+        }
+
+        function resetSection(section) {
+            section.querySelectorAll('.item').forEach(el => {
+                el.classList.remove('done', 'imagine');
+                el.querySelector('.item-icon').textContent = '○';
+            });
+        }
+    </script>
+</body>
+</html>
