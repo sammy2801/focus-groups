@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 2 — What Have You Done?</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #F7F6F3;
+            color: #1A1917;
+            min-height: 100vh;
+            padding: 40px 24px 60px;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            max-width: 720px;
+            margin: 0 auto 36px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .ex-tag {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #8A8780;
+            margin-bottom: 8px;
+        }
+
+        h1 { font-size: 32px; font-weight: 700; }
+
+        .instruction {
+            font-size: 18px;
+            color: #5A5855;
+            margin-top: 8px;
+        }
+
+        .btn-reset {
+            font-size: 15px;
+            color: #5A5855;
+            background: none;
+            border: 1.5px solid #D0CEC9;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: color 0.15s, border-color 0.15s;
+            margin-top: 4px;
+        }
+        .btn-reset:hover { color: #1A1917; border-color: #8A8780; }
+
+        /* ── Progress ── */
+        .progress-row {
+            max-width: 720px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .prog-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #D8D5CF;
+            transition: background 0.15s, transform 0.15s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .prog-dot.active {
+            background: #1A1917;
+            transform: scale(1.3);
+        }
+
+        .prog-dot.answered {
+            background: #2A6049;
+        }
+
+        .progress-label {
+            font-size: 16px;
+            font-weight: 600;
+            color: #6B6860;
+            white-space: nowrap;
+        }
+
+        /* ── Statement card ── */
+        .statement-card {
+            max-width: 720px;
+            margin: 0 auto 32px;
+            background: #fff;
+            border: 1.5px solid #E0DDD8;
+            border-radius: 12px;
+            padding: 44px 48px;
+            text-align: center;
+            min-height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .statement-text {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.55;
+            color: #1A1917;
+        }
+
+        /* ── Participant badges ── */
+        .participants-row {
+            max-width: 720px;
+            margin: 0 auto 32px;
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+        }
+
+        .participant-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .p-label {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #8A8780;
+        }
+
+        .big-badge {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 2.5px solid #C0BDB8;
+            background: none;
+            font-size: 26px;
+            font-weight: 800;
+            color: #C0BDB8;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.1s;
+            user-select: none;
+        }
+
+        .big-badge:hover { transform: scale(1.08); }
+
+        .big-badge.done {
+            background: #2A6049;
+            border-color: #2A6049;
+            color: #fff;
+        }
+
+        .big-badge.imagine {
+            background: #8B5A1C;
+            border-color: #8B5A1C;
+            color: #fff;
+        }
+
+        /* ── Legend ── */
+        .legend-row {
+            max-width: 720px;
+            margin: 0 auto 36px;
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5A5855;
+        }
+
+        .legend-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.done    { background: #2A6049; }
+        .legend-dot.imagine { background: #8B5A1C; }
+        .legend-dot.none    { background: #F7F6F3; border: 2px solid #B0ADA8; }
+
+        /* ── Statement navigation ── */
+        .stmt-nav {
+            max-width: 720px;
+            margin: 0 auto 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-nav {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1A1917;
+            background: #fff;
+            border: 1.5px solid #D0CEC9;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .btn-nav:hover { background: #F0EDE8; border-color: #9A9690; }
+        .btn-nav:disabled { color: #C0BDB8; border-color: #E8E5DF; cursor: default; background: none; }
+
+        /* ── Exercise navigation ── */
+        .page-nav {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 24px;
+            border-top: 1px solid #E0DDD8;
+        }
+
+        .nav-link {
+            font-size: 17px;
+            font-weight: 500;
+            color: #5A5855;
+            text-decoration: none;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .nav-link:hover { color: #1A1917; border-bottom-color: #1A1917; }
+        .nav-indicator  { font-size: 15px; color: #8A8780; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <div>
+            <div class="ex-tag">Exercise 02</div>
+            <h1>What have you done?</h1>
+            <p class="instruction">Read each statement. Click a participant's circle to record their answer.</p>
+        </div>
+        <button class="btn-reset" onclick="resetAll()">Reset all</button>
+    </div>
+
+    <!-- Progress dots + counter -->
+    <div class="progress-row">
+        <div class="progress-dots" id="progress-dots"></div>
+        <span class="progress-label" id="progress-label">Statement 1 of 6</span>
+    </div>
+
+    <!-- Statement card -->
+    <div class="statement-card">
+        <p class="statement-text" id="statement-text"></p>
+    </div>
+
+    <!-- Participant response badges -->
+    <div class="participants-row">
+        <div class="participant-col">
+            <div class="p-label">P1</div>
+            <div class="big-badge" id="badge-0" onclick="cycleBadge(0)">○</div>
+        </div>
+        <div class="participant-col">
+            <div class="p-label">P2</div>
+            <div class="big-badge" id="badge-1" onclick="cycleBadge(1)">○</div>
+        </div>
+        <div class="participant-col">
+            <div class="p-label">P3</div>
+            <div class="big-badge" id="badge-2" onclick="cycleBadge(2)">○</div>
+        </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend-row">
+        <div class="legend-item">
+            <div class="legend-dot done"></div>
+            <span>I do this</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot imagine"></div>
+            <span>I could see myself doing it</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot none"></div>
+            <span>I don't care much for this</span>
+        </div>
+    </div>
+
+    <!-- Statement prev/next -->
+    <div class="stmt-nav">
+        <button class="btn-nav" id="btn-prev" onclick="go(-1)">← Previous</button>
+        <button class="btn-nav" id="btn-next" onclick="go(1)">Next →</button>
+    </div>
+
+    <!-- Exercise navigation -->
+    <nav class="page-nav">
+        <a href="exercise-1.html" class="nav-link">← Exercise 1</a>
+        <span class="nav-indicator">2 / 3</span>
+        <a href="exercise-3.html" class="nav-link">Next →</a>
+    </nav>
+
+    <script>
+        const STATEMENTS = [
+            "I've thought about whether animals can feel pain or have emotions",
+            "I've thought about where my food comes from",
+            "I've done something to help wildlife — like putting food out for birds",
+            "I've tried buying something because it said free-range or higher-welfare",
+            "I've signed a petition or taken part in a campaign about animal welfare",
+            "I've told someone I know about how animals are being treated",
+        ];
+
+        // 0 = none  1 = done (green ✓)  2 = imagine (brown ◌)
+        const STATE_LABELS  = ['', 'I do this', 'I could see myself doing it'];
+        const STATE_CLASSES = ['', 'done', 'imagine'];
+        const SYMBOLS       = ['○', '✓', '◌'];
+
+        // responses[statementIndex][participantIndex] = 0|1|2
+        const responses = STATEMENTS.map(() => [0, 0, 0]);
+
+        let current = 0;
+
+        /* ── Build progress dots ── */
+        function buildDots() {
+            const container = document.getElementById('progress-dots');
+            STATEMENTS.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'prog-dot';
+                dot.title = `Statement ${i + 1}`;
+                dot.onclick = () => goTo(i);
+                container.appendChild(dot);
+            });
+        }
+
+        /* ── Render current statement ── */
+        function render() {
+            document.getElementById('statement-text').textContent = STATEMENTS[current];
+            document.getElementById('progress-label').textContent =
+                `Statement ${current + 1} of ${STATEMENTS.length}`;
+
+            // Badges
+            [0, 1, 2].forEach(p => {
+                const val   = responses[current][p];
+                const badge = document.getElementById('badge-' + p);
+                badge.className   = 'big-badge' + (STATE_CLASSES[val] ? ' ' + STATE_CLASSES[val] : '');
+                badge.textContent = SYMBOLS[val];
+            });
+
+            // Progress dots
+            document.querySelectorAll('.prog-dot').forEach((dot, i) => {
+                const answered = responses[i].some(v => v !== 0);
+                dot.className = 'prog-dot' +
+                    (i === current ? ' active' : '') +
+                    (i !== current && answered ? ' answered' : '');
+            });
+
+            // Prev/Next buttons
+            document.getElementById('btn-prev').disabled = current === 0;
+            document.getElementById('btn-next').disabled = current === STATEMENTS.length - 1;
+        }
+
+        /* ── Cycle badge: none → done → imagine → none ── */
+        function cycleBadge(p) {
+            responses[current][p] = (responses[current][p] + 1) % 3;
+            render();
+        }
+
+        /* ── Navigate between statements ── */
+        function go(dir) { goTo(current + dir); }
+
+        function goTo(idx) {
+            if (idx < 0 || idx >= STATEMENTS.length) return;
+            current = idx;
+            render();
+        }
+
+        /* ── Reset all responses ── */
+        function resetAll() {
+            responses.forEach(r => r.fill(0));
+            render();
+        }
+
+        buildDots();
+        render();
+    </script>
+</body>
+</html>

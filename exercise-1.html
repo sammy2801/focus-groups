@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 1 — The Animals</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #F7F6F3;
+            color: #1A1917;
+            min-height: 100vh;
+            padding: 40px 24px 60px;
+        }
+
+        .page-header {
+            max-width: 960px;
+            margin: 0 auto 32px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .ex-tag {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #8A8780;
+            margin-bottom: 8px;
+        }
+
+        h1 { font-size: 32px; font-weight: 700; }
+
+        .instruction {
+            font-size: 18px;
+            color: #5A5855;
+            margin-top: 8px;
+        }
+
+        .btn-reset {
+            font-size: 15px;
+            color: #5A5855;
+            background: none;
+            border: 1.5px solid #D0CEC9;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-weight: 500;
+            transition: color 0.15s, border-color 0.15s;
+            margin-top: 4px;
+        }
+        .btn-reset:hover { color: #1A1917; border-color: #8A8780; }
+
+        /* Question */
+        .question-text {
+            max-width: 960px;
+            margin: 0 auto 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1A1917;
+            line-height: 1.4;
+        }
+
+        .question-hint {
+            max-width: 960px;
+            margin: 0 auto 20px;
+            font-size: 16px;
+            color: #6B6860;
+        }
+
+        /* Animal bank */
+        .bank-zone {
+            max-width: 960px;
+            margin: 0 auto 16px;
+            min-height: 100px;
+            background: #fff;
+            border: 2px dashed #C8C5BF;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+            transition: background 0.1s, border-color 0.1s;
+        }
+
+        .bank-zone.drag-over {
+            background: #F0EDE8;
+            border-color: #8A8780;
+        }
+
+        /* Tier board */
+        .tier-board {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .tier-row {
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 90px;
+            border: 1px solid #D8D5CF;
+        }
+
+        .tier-label {
+            width: 100px;
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 8px;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .tier-letter {
+            font-size: 28px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .tier-desc {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            opacity: 0.95;
+            margin-top: 5px;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .tier-zone {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 14px 16px;
+            background: #fff;
+            align-content: flex-start;
+            min-height: 90px;
+            transition: background 0.1s, box-shadow 0.1s;
+        }
+
+        .tier-zone.drag-over {
+            background: #F0EDE8;
+            box-shadow: inset 0 0 0 2px #8A8780;
+        }
+
+        /* Animal cards — same style everywhere */
+        .animal-card {
+            background: #F7F6F3;
+            border: 1.5px solid #D8D5CF;
+            border-radius: 10px;
+            padding: 14px 10px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            text-align: center;
+            width: 90px;
+            cursor: grab;
+            user-select: none;
+            transition: box-shadow 0.15s, opacity 0.15s;
+        }
+
+        .animal-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .animal-card:active { cursor: grabbing; }
+        .animal-card.dragging { opacity: 0.25; }
+
+        .card-emoji { font-size: 30px; line-height: 1; }
+        .card-name  { font-size: 14px; font-weight: 700; color: #1A1917; }
+
+        /* Navigation */
+        .page-nav {
+            max-width: 960px;
+            margin: 48px auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-size: 17px;
+            font-weight: 500;
+            color: #5A5855;
+            text-decoration: none;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .nav-link:hover { color: #1A1917; border-bottom-color: #1A1917; }
+        .nav-indicator  { font-size: 15px; color: #8A8780; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <div>
+            <div class="ex-tag">Exercise 01</div>
+            <h1>The animals</h1>
+            <p class="instruction">Drag each animal into a tier.</p>
+        </div>
+        <button class="btn-reset" onclick="resetAll()">Reset</button>
+    </div>
+
+    <p class="question-text">Which of these animals have the most rights — and which have the least?</p>
+    <p class="question-hint">Drag each animal from the box below into one of the tiers. You can move them around at any time.</p>
+
+    <div class="bank-zone" id="zone-bank"
+         ondragover="onDragOver(event)"
+         ondrop="onDrop(event,'bank')"
+         ondragleave="onDragLeave(event)"></div>
+
+    <div class="tier-board" id="tier-board"></div>
+
+    <nav class="page-nav">
+        <a href="index.html" class="nav-link">← Home</a>
+        <span class="nav-indicator">1 / 3</span>
+        <a href="exercise-2.html" class="nav-link">Next →</a>
+    </nav>
+
+    <script>
+        const ANIMALS = [
+            { id: 'butterfly', emoji: '🦋', name: 'Butterfly' },
+            { id: 'horse',     emoji: '🐎', name: 'Horse'     },
+            { id: 'crab',      emoji: '🦀', name: 'Crab'      },
+            { id: 'dog',       emoji: '🐕', name: 'Dog'       },
+            { id: 'turkey',    emoji: '🦃', name: 'Turkey'    },
+            { id: 'bee',       emoji: '🐝', name: 'Bee'       },
+            { id: 'deer',      emoji: '🦌', name: 'Deer'      },
+            { id: 'pig',       emoji: '🐷', name: 'Pig'       },
+            { id: 'dolphin',   emoji: '🐬', name: 'Dolphin'   },
+            { id: 'rabbit',    emoji: '🐇', name: 'Rabbit'    },
+            { id: 'chicken',   emoji: '🐔', name: 'Chicken'   },
+            { id: 'fox',       emoji: '🦊', name: 'Fox'       },
+            { id: 'salmon',    emoji: '🐟', name: 'Salmon'    },
+            { id: 'cat',       emoji: '🐈', name: 'Cat'       },
+            { id: 'badger',    emoji: '🦡', name: 'Badger'    },
+            { id: 'cow',       emoji: '🐄', name: 'Cow'       },
+            { id: 'robin',     emoji: '🐦', name: 'Robin'     },
+            { id: 'ant',       emoji: '🐜', name: 'Ant'       },
+            { id: 'lobster',   emoji: '🦞', name: 'Lobster'   },
+            { id: 'sheep',     emoji: '🐑', name: 'Sheep'     },
+        ];
+
+        const TIERS = [
+            { id: 'A', desc: 'Full rights',   color: '#1A4D30' },
+            { id: 'B', desc: 'Strong rights', color: '#2A6A52' },
+            { id: 'C', desc: 'Some rights',   color: '#5A6060' },
+            { id: 'D', desc: 'No rights',     color: '#4A3030' },
+        ];
+
+        const placement = Object.fromEntries(ANIMALS.map(a => [a.id, 'bank']));
+
+        let dragId  = null;
+        let dragSrc = null;
+
+        function buildTierRows() {
+            const board = document.getElementById('tier-board');
+            TIERS.forEach(tier => {
+                const row = document.createElement('div');
+                row.className = 'tier-row';
+                row.innerHTML =
+                    `<div class="tier-label" style="background:${tier.color}">` +
+                        `<div class="tier-letter">${tier.id}</div>` +
+                        `<div class="tier-desc">${tier.desc}</div>` +
+                    `</div>` +
+                    `<div class="tier-zone" id="zone-${tier.id}"` +
+                        ` ondragover="onDragOver(event)"` +
+                        ` ondrop="onDrop(event,'${tier.id}')"` +
+                        ` ondragleave="onDragLeave(event)"></div>`;
+                board.appendChild(row);
+            });
+        }
+
+        function render() {
+            document.getElementById('zone-bank').innerHTML = '';
+            TIERS.forEach(t => document.getElementById('zone-' + t.id).innerHTML = '');
+            ANIMALS.forEach(a => {
+                document.getElementById('zone-' + placement[a.id]).appendChild(makeCard(a));
+            });
+        }
+
+        function makeCard(animal) {
+            const card = document.createElement('div');
+            card.className = 'animal-card';
+            card.draggable = true;
+            card.innerHTML =
+                `<div class="card-emoji">${animal.emoji}</div>` +
+                `<div class="card-name">${animal.name}</div>`;
+            card.addEventListener('dragstart', e => {
+                dragId  = animal.id;
+                dragSrc = placement[animal.id];
+                e.dataTransfer.effectAllowed = 'move';
+                setTimeout(() => card.classList.add('dragging'), 0);
+            });
+            card.addEventListener('dragend', () => { dragId = null; dragSrc = null; });
+            return card;
+        }
+
+        function onDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function onDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function onDrop(e, target) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (!dragId || dragSrc === target) return;
+            placement[dragId] = target;
+            render();
+        }
+
+        function resetAll() {
+            ANIMALS.forEach(a => placement[a.id] = 'bank');
+            render();
+        }
+
+        buildTierRows();
+        render();
+    </script>
+</body>
+</html>

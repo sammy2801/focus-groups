@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Research Exercises</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #F7F6F3;
+            color: #1A1917;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 560px;
+            width: 100%;
+        }
+
+        .segment-tag {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #6B6860;
+            background: #EFEDE8;
+            padding: 6px 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 6px;
+        }
+
+        .tagline {
+            font-size: 19px;
+            color: #6B6860;
+            margin-bottom: 48px;
+        }
+
+        .exercise-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        a.exercise-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 22px 24px;
+            background: #fff;
+            border: 1.5px solid #E8E5DF;
+            border-radius: 10px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.15s ease, transform 0.1s ease;
+        }
+
+        a.exercise-card:hover {
+            border-color: #2A6049;
+            transform: translateY(-1px);
+        }
+
+        .ex-num {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #B0ADA8;
+            min-width: 24px;
+        }
+
+        .ex-info { flex: 1; }
+
+        .ex-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .ex-sub {
+            font-size: 15px;
+            color: #8A8780;
+        }
+
+        .ex-arrow {
+            font-size: 20px;
+            color: #C8C5BF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="segment-tag">Focus Group</div>
+        <h1>Social Research<br>Exercises</h1>
+        <p class="tagline">Three exercises</p>
+        <div class="exercise-list">
+            <a href="exercise-1.html" class="exercise-card">
+                <span class="ex-num">01</span>
+                <div class="ex-info">
+                    <div class="ex-title">The animals</div>
+                    <div class="ex-sub">Animal warm-up &amp; rights tier list</div>
+                </div>
+                <span class="ex-arrow">→</span>
+            </a>
+            <a href="exercise-2.html" class="exercise-card">
+                <span class="ex-num">02</span>
+                <div class="ex-info">
+                    <div class="ex-title">What have you done?</div>
+                    <div class="ex-sub">Behaviour ladder</div>
+                </div>
+                <span class="ex-arrow">→</span>
+            </a>
+            <a href="exercise-3.html" class="exercise-card">
+                <span class="ex-num">03</span>
+                <div class="ex-info">
+                    <div class="ex-title">What would you do?</div>
+                    <div class="ex-sub">Scenario discussion</div>
+                </div>
+                <span class="ex-arrow">→</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
